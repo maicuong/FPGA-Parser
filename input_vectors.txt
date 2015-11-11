@@ -1,0 +1,5 @@
+L1 BYTE 'a'    
+L2 ANY            
+L3 RBYTE 'a'    
+L4 SET [1-9]   
+L5 OBYTE 'a'   
