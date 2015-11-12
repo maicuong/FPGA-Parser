@@ -1,5 +1,5 @@
 ISim log file
-Running: C:\FPGAPrj\CONTROLLOR\CONTROLLOR_VHDL_isim_beh.exe -intstyle ise -gui -tclbatch isim.cmd -wdb C:/FPGAPrj/CONTROLLOR/CONTROLLOR_VHDL_isim_beh.wdb 
+Running: C:\FPGAPrj\CONTROLLOR\FILE_INPUT_VHDL_isim_beh.exe -intstyle ise -gui -tclbatch isim.cmd -wdb C:/FPGAPrj/CONTROLLOR/FILE_INPUT_VHDL_isim_beh.wdb 
 ISim P.20131013 (signature 0x7708f090)
 WARNING: A WEBPACK license was found.
 WARNING: Please use Xilinx License Configuration Manager to check out a full ISim license.
@@ -11,16 +11,8 @@ Time resolution is 1 ps
 # run 1000 ns
 Simulator is doing circuit initialization process.
 Finished circuit initialization process.
-# isim force add /controllor_vhdl/clk 0 -radix bin -value 1 -radix bin -time 500 ns -repeat 1 us
-# isim force add /controllor_vhdl/start 0 -radix bin -value 1 -radix bin -time 1 us -repeat 2 us -cancel 2 us
-# run 10.00us
-# run 10.00us
-# run 10.00us
-ERROR: Index 11 out of bound 1 to 10. 
-ERROR: In process CONTROLLOR_VHDL.vhd:215 
- 
-INFO: Simulator is stopped.
-# run 10.00us
-INFO: Simulator is stopped.
-# run 10.00us
-INFO: Simulator is stopped.
+# restart
+# isim force add /file_input_vhdl/trg 0 -radix bin -value 1 -radix bin -time 500 ns -repeat 1 us
+# run 1.00us
+Simulator is doing circuit initialization process.
+Finished circuit initialization process.

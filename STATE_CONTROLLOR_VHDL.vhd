@@ -13,7 +13,10 @@ entity STATE_CONTROLLOR_VHDL is
 		ANY_TRG : out std_logic := '0';
 		SET_TRG : out std_logic := '0';
 		RBYTE_TRG : out std_logic := '0';
-		OBYTE_TRG : out std_logic := '0');
+		OBYTE_TRG : out std_logic := '0';
+		POS_TRG : out std_logic := '0';
+		BACK_TRG : out std_logic := '0';
+		NBYTE_TRG : out std_logic := '0');
 end STATE_CONTROLLOR_VHDL;
 
 architecture Behavioral of STATE_CONTROLLOR_VHDL is
@@ -29,9 +32,12 @@ begin
 			case id is
 				when 0 => BYTE_TRG <= trg_one_reg ;
 				when 1 => ANY_TRG <= trg_one_reg ;
-				when 3 => SET_TRG <= trg_one_reg ;
-				when 4 => RBYTE_TRG <= trg_one_reg ;
-				when 5 => OBYTE_TRG <= trg_one_reg ;
+				when 2 => SET_TRG <= trg_one_reg ;
+				when 3 => RBYTE_TRG <= trg_one_reg ;
+				when 4 => OBYTE_TRG <= trg_one_reg ;
+				when 5 => POS_TRG <= trg_one_reg;
+				when 6 => BACK_TRG <= trg_one_reg;
+				when 7 => NBYTE_TRG <= trg_one_reg;
 				when others => BYTE_TRG <= '0';
 			end case;
 		end if;
