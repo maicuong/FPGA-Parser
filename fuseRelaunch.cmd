@@ -1,1 +1,1 @@
--intstyle "ise" -incremental -lib "secureip" -o "C:/FPGAPrj/CONTROLLOR/CONTROLLOR_VHDL_isim_beh.exe" -prj "C:/FPGAPrj/CONTROLLOR/CONTROLLOR_VHDL_beh.prj" "work.CONTROLLOR_VHDL" 
+-intstyle "ise" -incremental -lib "secureip" -o "C:/FPGAPrj/CONTROLLOR/TEXT_INPUT_VHDL_isim_beh.exe" -prj "C:/FPGAPrj/CONTROLLOR/TEXT_INPUT_VHDL_beh.prj" "work.TEXT_INPUT_VHDL" 

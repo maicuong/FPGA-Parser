@@ -53,7 +53,7 @@ architecture behave of FILE_INPUT_VHDL is
   type int_array is array(1 to 10) of integer;
   signal call_stack : int_array := (others => 0);
   signal alt_stack : int_array := (others => 0) ;
-  
+  signal first_stack : int_array := (0,16,25,17,0,0,0,0,0,0) ;
   
  
   --type set_record is record 
@@ -111,6 +111,7 @@ architecture behave of FILE_INPUT_VHDL is
 
 
 	signal call_top, alt_top : natural := 1;
+	signal first_top : natural := 4;
 	
 	signal fail_sig : boolean := false;
 	signal parser_ok_sig : boolean := false;
@@ -138,7 +139,7 @@ begin
 	 variable rdy_array : std_logic_vector(1 to 15) := (others => '0');
 	 variable now_sig : integer := 0;
 	 variable next_accept : boolean := false;
-	 
+	 variable first_save : integer := 0 ;
   begin 
 	 wait until trg = '1' ;
 	 --file_open(in_file, "math_copy.moz",  read_mode);
@@ -238,8 +239,10 @@ begin
 				when "Skip" => command_array(cmd_no).id <= 11;
 				when HT&"Ski" => command_array(cmd_no).id <= 11;
 				when "Firs" => command_array(cmd_no).id <= 12;
+									first_save := cmd_no ;
 									--command_array(cmd_read_no).next_cmd <= 25;
 				when HT&"Fir" => command_array(cmd_no).id <= 12;
+				                 first_save := cmd_no ;
 				                 --command_array(cmd_read_no).next_cmd <= 25;
 				when "Fail" => command_array(cmd_no).id <= 13;
 				when HT&"Fai" => command_array(cmd_no).id <= 13;
@@ -306,15 +309,15 @@ begin
 		--if (TRG = '1' or RDY_IN = '1') then
 		
 		if (FAIL = '1') then 
-			if (alt_top > 1) then 
-				if(alt_stack(alt_top-1) = 0) then 
+			--if (alt_top > 1) then 
+				if(alt_stack(1) = 0) then 
 					fail_sig <= true;
 				else
 					cmd_read_no := alt_stack(alt_top-1);
 					alt_stack(alt_top-1) <= 0;
 					alt_top <= alt_top - 1;
 				end if;
-			 end if;
+			 --end if;
 		elsif (RDY_IN = '1' ) then
 		case command_array(cmd_read_no).id is
 			--when 1 => 		
@@ -367,7 +370,17 @@ begin
 						 --clk_accept := true;
 						 --rdy_array := (others => '0');
 						 --rdy_array(1) := '1' ;
-			when 12 => cmd_read_no := 25;
+			when 12 =>  alt_stack(alt_top) <= 16;
+							alt_stack(alt_top+1) <= 25;
+			            alt_top <= alt_top + 2;
+							cmd_read_no := 17;
+			            --if(first_top = 1) then
+								--fail_sig <= true ;
+							--else
+								--cmd_read_no := first_stack(first_top);
+								--first_stack(first_top) <= 0;
+								--first_top <= first_top - 1;
+							--end if;
 			           --clk_accept := true;
 						 --rdy_array := (others => '0');
 						 --rdy_array(2) := '1' ;
@@ -378,6 +391,12 @@ begin
 							  call_stack(call_top-1) <= 0;
 							  call_top <= call_top - 1;
 						  end if;
+						  -----------------------
+						  --first_top reset
+						  -----------------------
+						  --first_top <= 4;
+						  --alt_stack(alt_top-1) <= 0;
+						  --alt_top <= alt_top - 1;
 						  --clk_accept := true;
 						  --rdy_array := (others => '0');
 						  --rdy_array(3) := '1' ;
@@ -396,13 +415,14 @@ begin
 		
 		
 		case command_array(cmd_read_no).id is
-			when 1 => if (next_accept and (not fail_sig) and (not parser_ok_sig)) then
+			when 1 =>    if (next_accept and (not fail_sig) and (not parser_ok_sig)) then
 								rdy_array := (others => '0');
 								rdy_array(1) := '1';
 								next_accept := false;
 							 else
 							    rdy_array := (others => '0');
 							 end if;
+							 BYTE_TEXT <= command_array(cmd_read_no).char_first;
 			when 2 => if (next_accept and (not fail_sig) and (not parser_ok_sig)) then
 								rdy_array := (others => '0');
 								rdy_array(2) := '1';

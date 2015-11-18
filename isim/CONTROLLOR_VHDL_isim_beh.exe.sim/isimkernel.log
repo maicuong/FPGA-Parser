@@ -2,9 +2,28 @@ Command line:
    CONTROLLOR_VHDL_isim_beh.exe
      -simmode  gui
      -simrunnum  0
-     -socket  49814
+     -socket  58198
 
-Tue Nov 17 13:22:42 2015
+Wed Nov 18 17:30:23 2015
 
 
- Elaboration Time: 0.0625 sec
+ Elaboration Time: 0.046875 sec
+
+ Current Memory Usage: 364.454 Meg
+
+ Total Signals          : 181
+ Total Nets             : 366
+ Total Signal Drivers   : 84
+ Total Blocks           : 18
+ Total Primitive Blocks : 17
+ Total Processes        : 57
+ Total Traceable Variables  : 19
+ Total Scalar Nets and Variables : 1389
+Total Line Count : 456
+
+ Total Simulation Time: 0.109375 sec
+
+ Current Memory Usage: 364.454 Meg
+
+Wed Nov 18 17:30:27 2015
+

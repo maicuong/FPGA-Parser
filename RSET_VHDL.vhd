@@ -21,7 +21,7 @@ architecture Behavioral of RSET_VHDL is
 	
    signal count_out_reg : integer := 1;
 	signal match_reg : std_logic ;
-	signal rdy_reg : std_logic := '0' ;
+	--signal rdy_reg : std_logic := '0' ;
 	
 begin
 
@@ -49,21 +49,21 @@ begin
 	----------------------------------------------
 	--rdy_reg
 	----------------------------------------------
-	process (CLK)
-	begin
-		if (CLK'event and CLK = '1') then
-			if (R='1') then
-				rdy_reg <= '0';
-			elsif (match_reg = '1') then
-				rdy_reg <= '1';
-			else
-				rdy_reg <= '0';
-			end if;
-		end if;
-	end process;
+	--process (CLK)
+	--begin
+		--if (CLK'event and CLK = '1') then
+			--if (R='1') then
+				--rdy_reg <= '0';
+			--elsif (match_reg = '1') then
+				--rdy_reg <= '1';
+			--else
+				--rdy_reg <= '0';
+			--end if;
+		--end if;
+	--end process;
 	------------------------------------
 	
 	COUNT_OUT <= count_out_reg ;
-	RDY_ONE <= rdy_reg ;
+	RDY_ONE <= match_reg ;
 	
 end Behavioral;

@@ -1,0 +1,30 @@
+Command line:
+   TEXT_INPUT_VHDL_isim_beh.exe
+     -simmode  gui
+     -simrunnum  0
+     -socket  58480
+
+Wed Nov 18 17:34:06 2015
+
+
+ Elaboration Time: 0.03125 sec
+
+ Current Memory Usage: 364.372 Meg
+
+ Total Signals          : 2
+ Total Nets             : 31
+ Total Signal Drivers   : 1
+ Total Blocks           : 5
+ Total Primitive Blocks : 5
+ Total Processes        : 1
+ Total Traceable Variables  : 16
+ Total Scalar Nets and Variables : 1035
+Total Line Count : 13
+Total Line Count : 13
+
+ Total Simulation Time: 0.046875 sec
+
+ Current Memory Usage: 364.372 Meg
+
+Wed Nov 18 17:34:33 2015
+

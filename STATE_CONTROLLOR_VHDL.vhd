@@ -18,7 +18,8 @@ entity STATE_CONTROLLOR_VHDL is
 		BACK_TRG : out std_logic := '0';
 		NBYTE_TRG : out std_logic := '0';
 		RSET_TRG : out std_logic := '0';
-		OTHERS_TRG : out std_logic := '0');
+		OTHERS_TRG : out std_logic := '0';
+		FAIL_TRG : out std_logic := '0');
 		--CALL_TRG : out std_logic := '0';
 		--ALT_TRG : out std_logic := '0';
 		--SKIP_TRG : out std_logic := '0';
@@ -148,6 +149,14 @@ begin
 							 else
 							    trg_array <= (others => '0');
 							 end if;
+				when 13 =>  if (next_accept) then 
+								trg_array <= (others => '0');
+								trg_array(13) <= '1';
+								--now_sig <= 12;
+								next_accept := false;
+							 else
+							    trg_array <= (others => '0');
+							 end if;
 				--when 13 => OTHERS_TRG <= trg_one_reg;
 				when 15 =>  if (next_accept) then 
 								trg_array <= (others => '0');
@@ -172,6 +181,7 @@ begin
 	BACK_TRG <= trg_array(7);
 	NBYTE_TRG <= trg_array(8);
 	RSET_TRG <= trg_array(14);
+	FAIL_TRG <= trg_array(13);
 	OTHERS_TRG <= (trg_array(9) or trg_array(10) or trg_array(11) or trg_array(12) or trg_array(15));
 		
 end Behavioral;

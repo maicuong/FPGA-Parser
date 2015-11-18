@@ -53,6 +53,7 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		BACK_TRG : out std_logic;
 		NBYTE_TRG : out std_logic;
 		RSET_TRG : out std_logic;
+		FAIL_TRG : out std_logic;
 		OTHERS_TRG : out std_logic);
 --		CALL_TRG : out std_logic := '0';
 --		ALT_TRG : out std_logic := '0';
@@ -71,6 +72,7 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		NEZ_IN : in character ;
 		COUNT_IN : in integer ;
 		COUNT_OUT : out integer ;
+		FAIL : out std_logic ;
 		RDY_ONE : out std_logic);
 	end component;
 	
@@ -178,7 +180,7 @@ architecture Behavioral of CONTROLLOR_VHDL is
 	--Need to fix when add new
 	------------------------------------------------
 	constant ARRAY_WIDTH : natural := 15 ;
-	signal text_file_in : string(1 to 10) := "1+2*3     " ;
+	signal text_file_in : string(1 to 10) := "(1+2)*3-  " ;
 	signal byte_text_reg : character ;
 	signal set_text_start_sig, set_text_end_sig : character;
 	signal set_option_sig : integer ;
@@ -186,9 +188,6 @@ architecture Behavioral of CONTROLLOR_VHDL is
 	signal obyte_text_reg : character;
 	signal nbyte_text_reg : character;
 	signal pos_reg : integer := 0 ;
-	
-	signal fail_reg : std_logic ;
-	
 		
 	--subtype digit is integer range 1 to 10 ;
 	signal count : integer := 1;
@@ -200,6 +199,8 @@ architecture Behavioral of CONTROLLOR_VHDL is
 	signal next_rdy : std_logic := '0';
 	signal id_reg : integer := 0 ;
 	signal trg_reg_array : std_logic_vector(ARRAY_WIDTH downto 1) := (others => '0') ;
+	signal fail_reg_array : std_logic_vector(ARRAY_WIDTH downto 0) := (others => '0') ;
+	signal fail_reg : std_logic := '0' ;
 
 	signal cmd_line : natural := 1;
 	
@@ -239,6 +240,7 @@ begin
 	
 	count <= max_count(count_array) ;
 	next_rdy <= (next_rdy_function(next_rdy_array));
+	fail_reg <= next_rdy_function(fail_reg_array) ;
 	PARSER_ERROR <= end_fail ;
 	PARSER_OK <= end_parser_ok ;
 	
@@ -283,6 +285,7 @@ begin
 		BACK_TRG => trg_reg_array(7),
 		NBYTE_TRG => trg_reg_array(8),
 		RSET_TRG => trg_reg_array(14),
+		FAIL_TRG => fail_reg_array(13),
 		OTHERS_TRG => next_rdy_array(0));
 		--CALL_TRG => next_rdy_array(9),
 		--ALT_TRG => next_rdy_array(10),
@@ -300,6 +303,7 @@ begin
 		NEZ_IN => byte_text_reg,
 		COUNT_IN => count,
 		COUNT_OUT => count_array(1),
+		FAIL => fail_reg_array(1),
 		RDY_ONE => next_rdy_array(1));
 		
 	ANY : ANY_VHDL port map (
@@ -320,7 +324,7 @@ begin
 		TEXT_IN => text_in_reg,
 		COUNT_IN => count,
 		COUNT_OUT => count_array(3),
-		FAIL => fail_reg,
+		FAIL => fail_reg_array(3),
 		RDY_ONE => next_rdy_array(3));
 		
 	RBYTE : RBYTE_VHDL port map (
