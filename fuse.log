@@ -1,9 +1,21 @@
-Running: C:\Xilinx\14.7\ISE_DS\ISE\bin\nt64\unwrapped\fuse.exe -intstyle ise -incremental -lib secureip -o C:/FPGAPrj/CONTROLLOR/TEXT_INPUT_VHDL_isim_beh.exe -prj C:/FPGAPrj/CONTROLLOR/TEXT_INPUT_VHDL_beh.prj work.TEXT_INPUT_VHDL 
+Running: C:\Xilinx\14.7\ISE_DS\ISE\bin\nt64\unwrapped\fuse.exe -intstyle ise -incremental -lib secureip -o C:/FPGAPrj/CONTROLLOR/CONTROLLOR_VHDL_isim_beh.exe -prj C:/FPGAPrj/CONTROLLOR/CONTROLLOR_VHDL_beh.prj work.CONTROLLOR_VHDL 
 ISim P.20131013 (signature 0x7708f090)
 Number of CPUs detected in this system: 4
 Turning on mult-threading, number of parallel sub-compilation jobs: 8 
 Determining compilation order of HDL files
 Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/TEXT_INPUT_VHDL.vhd" into library work
+Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/STATE_CONTROLLOR_VHDL.vhd" into library work
+Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/SET_VHDL.vhd" into library work
+Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/RSET_VHDL.vhd" into library work
+Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/RBYTE_VHDL.vhd" into library work
+Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/POS_VHDL.vhd" into library work
+Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/OBYTE_VHDL.vhd" into library work
+Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/NBYTE_VHDL.vhd" into library work
+Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/FILE_INPUT_VHDL.vhd" into library work
+Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/BYTE_VHDL.vhd" into library work
+Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/BACK_VHDL.vhd" into library work
+Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/ANY_VHDL.vhd" into library work
+Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/CONTROLLOR_VHDL.vhd" into library work
 Starting static elaboration
 Completed static elaboration
 Compiling package standard
@@ -11,10 +23,23 @@ Compiling package std_logic_1164
 Compiling package numeric_std
 Compiling package textio
 Compiling package std_logic_textio
-Compiling architecture behavioral of entity text_input_vhdl
+Compiling package std_logic_arith
+Compiling package std_logic_unsigned
+Compiling architecture behave of entity FILE_INPUT_VHDL [file_input_vhdl_default]
+Compiling architecture behavioral of entity TEXT_INPUT_VHDL [text_input_vhdl_default]
+Compiling architecture behavioral of entity STATE_CONTROLLOR_VHDL [state_controllor_vhdl_default]
+Compiling architecture behavioral of entity BYTE_VHDL [byte_vhdl_default]
+Compiling architecture behavioral of entity ANY_VHDL [any_vhdl_default]
+Compiling architecture behavioral of entity SET_VHDL [set_vhdl_default]
+Compiling architecture behavioral of entity RBYTE_VHDL [rbyte_vhdl_default]
+Compiling architecture behavioral of entity OBYTE_VHDL [obyte_vhdl_default]
+Compiling architecture behavioral of entity POS_VHDL [pos_vhdl_default]
+Compiling architecture behavioral of entity BACK_VHDL [back_vhdl_default]
+Compiling architecture behavioral of entity NBYTE_VHDL [nbyte_vhdl_default]
+Compiling architecture behavioral of entity RSET_VHDL [rset_vhdl_default]
+Compiling architecture behavioral of entity controllor_vhdl
 Time Resolution for simulation is 1ps.
-Waiting for 1 sub-compilation(s) to finish...
-Compiled 6 VHDL Units
-Built simulation executable C:/FPGAPrj/CONTROLLOR/TEXT_INPUT_VHDL_isim_beh.exe
-Fuse Memory Usage: 34308 KB
-Fuse CPU Usage: 608 ms
+Compiled 32 VHDL Units
+Built simulation executable C:/FPGAPrj/CONTROLLOR/CONTROLLOR_VHDL_isim_beh.exe
+Fuse Memory Usage: 36676 KB
+Fuse CPU Usage: 1265 ms

@@ -37,7 +37,8 @@ begin
 				if(((OPTION = 0 or OPTION = 1) and (TEXT_IN = NEZ_IN_START or TEXT_IN = NEZ_IN_END)) 
 					or((OPTION = 2) and (TEXT_IN >= NEZ_IN_START and TEXT_IN <= NEZ_IN_END))) then
 					match_reg <= '1' ;
-					count_out_reg <= COUNT_IN + 1;	
+					--count_out_reg <= COUNT_IN + 1;	
+					count_out_reg <= COUNT_IN ;
 				else
 					fail_reg <= '1' ;
 				end if;

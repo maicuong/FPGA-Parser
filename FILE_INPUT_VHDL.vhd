@@ -21,6 +21,7 @@ entity FILE_INPUT_VHDL is
 	CMD_LINE_NO : out natural := 1;
 	END_FAIL : buffer boolean := false ;
 	PARSER_OK : buffer boolean := false;
+	NEXT_TEXT_RDY : out std_logic := '0';
 	NEXT_RDY : out std_logic := '0');
 end FILE_INPUT_VHDL;
 
@@ -125,7 +126,7 @@ begin
 	trg_sig <= TRG or RDY_IN or FAIL or CLK;
    --next_rdy_sig <= next_rdy_function(rdy_array);
 	
-  process 
+  process (CLK)
 	 variable id_reg : integer := 0 ;
 	 variable l:         line;
     variable c:         character;
@@ -141,9 +142,12 @@ begin
 	 variable next_accept : boolean := false;
 	 variable first_save : integer := 0 ;
   begin 
-	 wait until trg = '1' ;
+	 --wait until clk = '1' ;
 	 --file_open(in_file, "math_copy.moz",  read_mode);
-			
+		
+	if(CLK'event and CLK = '1') then
+		
+	 if(trg = '1') then
 	 while not endfile(in_file) loop
 	 --wait until trg = '1' ;
 		readline(in_file, l);
@@ -291,11 +295,11 @@ begin
 	----------------------------------------------------
 	--Saved command_array
 	----------------------------------------------------
-	
+	end if;
 	
     
-	while (cmd_read_no < 45) loop
-		wait until CLK = '1' ; 
+	--while (cmd_read_no < 45) loop
+		--wait until CLK = '1' ; 
 		--case cmd_read_no is
 			--when 0 => cmd_read_no := cmd_read_no + 1 ; 
 			id_reg := command_array(cmd_read_no).id;
@@ -548,6 +552,8 @@ begin
 		
 		ID <= command_array(cmd_read_no).id;
 		NEXT_RDY <= next_rdy_function(rdy_array);
+		----------------------------------------
+		NEXT_TEXT_RDY <= (rdy_array(1) or rdy_array(3) or rdy_array(14));
 		
 		CMD_LINE_NO <= cmd_read_no ;
 		--test <= cmd_read_no;
@@ -555,7 +561,8 @@ begin
 		END_FAIL <= fail_sig ;
 		PARSER_OK <= parser_ok_sig ;
 		
-	end loop;
+	--end loop;
+	end if;
 	
   end process;
   
@@ -563,21 +570,7 @@ begin
   
   --CMD_LINE_NO <= CMD_LINE ;
   
-  process 
-	file outfile : text is out "output.txt";
-	variable outline : line;
-  begin
-	wait until (END_FAIL or PARSER_OK);
-	--write(outline,"Input file: math_copy.moz");
-	--write(outline,string'("\n"));
-	if (END_FAIL) then
-		write(outline,"Parser Error!!");
-		writeline(outfile,outline);
-	elsif(PARSER_OK) then
-		write(outline,"Parser OK!!");
-		writeline(outfile,outline);
-	end if;
-  end process;
+  
 	
   
 end behave;

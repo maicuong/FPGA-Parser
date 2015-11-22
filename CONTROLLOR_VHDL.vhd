@@ -1,12 +1,15 @@
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use STD.textio.all;
+use ieee.std_logic_textio.all;
 
 entity CONTROLLOR_VHDL is
 	port (
 	CLK : in std_logic ;
 	START : in std_logic := '0' ;
-	PARSER_ERROR : out boolean := false ;
-	PARSER_OK : out boolean := false);
+	PARSER_ERROR : buffer boolean := false ;
+	PARSER_OK : buffer boolean := false);
 end CONTROLLOR_VHDL;
 
 architecture Behavioral of CONTROLLOR_VHDL is
@@ -31,8 +34,22 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		CMD_LINE_NO : out natural;
 		END_FAIL : buffer boolean ;
 	   PARSER_OK : buffer boolean ;
+		NEXT_TEXT_RDY : out std_logic ;
 		NEXT_RDY : out std_logic );
 	end component;
+	
+	
+	component TEXT_INPUT_VHDL 
+	   port(
+		CLK : in std_logic ;
+		TRG : in std_logic ;
+		RDY : in std_logic ;
+		COUNT_IN : in integer;
+		COUNT_OUT : out integer ;
+		CHAR_OUT : out character);
+	end component;
+	
+	
 	
 	------------------------------------------------
 	--Need to fix when add new
@@ -130,13 +147,15 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		CLK : in std_logic ;
 		R : in std_logic ;
 		TRG_ONE : in std_logic ;
+		CONTINUE_TRG : in std_logic ;
 		NEZ_IN_START : in character := 'a';
 		NEZ_IN_END : in character := 'z';
 		OPTION : in integer ;
-		TEXT_IN : in string(1 to 10) := "aa2aaaa1aa" ;
+		TEXT_IN : in character ;
 		COUNT_IN : in integer := 4;
 		COUNT_OUT : out integer ;
 		--FAIL : out std_logic := '0' ;
+		CONTINUE_RDY : out std_logic ;
 		RDY_ONE : out std_logic := '0');
 	end component;
 	
@@ -180,7 +199,7 @@ architecture Behavioral of CONTROLLOR_VHDL is
 	--Need to fix when add new
 	------------------------------------------------
 	constant ARRAY_WIDTH : natural := 15 ;
-	signal text_file_in : string(1 to 10) := "(1+2)*3-  " ;
+	signal text_file_in : string(1 to 10) := "(1+2)*3"&ESC&"  " ;
 	signal byte_text_reg : character ;
 	signal set_text_start_sig, set_text_end_sig : character;
 	signal set_option_sig : integer ;
@@ -191,7 +210,7 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		
 	--subtype digit is integer range 1 to 10 ;
 	signal count : integer := 1;
-	type count_all is array (1 to ARRAY_WIDTH) of integer;
+	type count_all is array (0 to ARRAY_WIDTH) of integer;
 	signal count_array : count_all := (others => 1) ;
 	
 	signal text_in_reg : character := ' ' ;
@@ -206,12 +225,22 @@ architecture Behavioral of CONTROLLOR_VHDL is
 	
 	signal nosignal_rdy : std_logic := '0' ;
 	
+	signal continue_sig : std_logic := '0' ;
+	
+	type string_array is array(1 to 3) of string(1 to 10);
+	signal res_string_array : string_array := (others => (others => ' '));
+
+	
+	signal next_trg : std_logic := '0' ;
+	signal next_text_rdy_reg : std_logic := '0' ;
+	
+	
 	--MAX function
 	function max_count(c:count_all) return integer is
 		variable i : integer ;
 		variable max : integer ;
 		begin
-		max := c(1);
+		max := c(0);
 		for i in c'range loop
 			if (c(i) > max) then
 				max := c(i) ;
@@ -241,8 +270,8 @@ begin
 	count <= max_count(count_array) ;
 	next_rdy <= (next_rdy_function(next_rdy_array));
 	fail_reg <= next_rdy_function(fail_reg_array) ;
-	PARSER_ERROR <= end_fail ;
-	PARSER_OK <= end_parser_ok ;
+	PARSER_ERROR <= end_fail or (end_parser_ok and text_in_reg /= ESC) ;
+	PARSER_OK <= (end_parser_ok and text_in_reg = ESC) ;
 	
 	------------------------------------------------
 	--Need to fix when add new
@@ -264,7 +293,20 @@ begin
 		CMD_LINE_NO => cmd_line,
 		END_FAIL => end_fail,
 		PARSER_OK => end_parser_ok,
+		NEXT_TEXT_RDY => next_text_rdy_reg,
 		NEXT_RDY => nosignal_rdy);
+
+
+	TEXT_INPUT : TEXT_INPUT_VHDL
+	port map(
+		CLK => CLK,
+		TRG => START,
+		RDY => next_text_rdy_reg,
+		COUNT_IN => count,
+		COUNT_OUT => count_array(0),
+		CHAR_OUT => text_in_reg);
+
+
 
 	------------------------------------------------
 	--Need to fix when add new
@@ -376,23 +418,69 @@ begin
 		CLK => CLK,
 		R => '0',
 		TRG_ONE => trg_reg_array(14),
+		CONTINUE_TRG => continue_sig,
 		NEZ_IN_START => set_text_start_sig,
 		NEZ_IN_END => set_text_end_sig,
 		OPTION => set_option_sig,
-		TEXT_IN => text_file_in,
+		TEXT_IN => text_in_reg,
 		COUNT_IN => count,
 		COUNT_OUT => count_array(14),
 		--FAIL : out std_logic := '0' ;
+		CONTINUE_RDY => continue_sig,
 		RDY_ONE => next_rdy_array(14));
 
 
-	process(CLK)
-		variable i : integer := 1;
+	process
+		variable i,j : integer := 1;
+		--variable next_trg : std_logic := '0' ;
 	begin
-		if(CLK'event and CLK = '1') then
-			i := count ;
-			text_in_reg <= text_file_in(i);
-		end if;
+	   --next_trg <= (START or next_rdy);
+		
+		wait until (next_rdy = '1');
+		if(i < 10) then
+		--if(CLK'event and CLK = '1') then
+		   --if (count - ((string_line_no-1)*10) <10 ) then
+			--i := count - ((string_line_no-1)*10);
+			--end if;
+			--i := char_no ;
+			--j := string_line_no ; 
+			
+			--while (res_string_array(string_line_no)(i) = ' ') loop
+				--if(i > 9) then
+					--j := j + 1 ;
+					--i := 1 ;
+				--else 
+					i := i + 1;
+				--end if;
+			--end loop;
+			
+			
+			------------------------------
+			------------------------------
+			------------------------------
+			--text_in_reg <= res_string_array(string_line_no)(i);
+			end if;
+			--count <= i + (string_line_no-1)*10 ;
+		--end if;
 	end process;
+	
+
+	
+	
+	process 
+	file outfile : text is out "output.txt";
+	variable outline : line;
+  begin
+	wait until (PARSER_ERROR or PARSER_OK);
+	--write(outline,"Input file: math_copy.moz");
+	--write(outline,string'("\n"));
+	if (PARSER_ERROR) then
+		write(outline,"Parser Error!!");
+		writeline(outfile,outline);
+	elsif(PARSER_OK) then
+		write(outline,"Parser OK!!");
+		writeline(outfile,outline);
+	end if;
+  end process;
 	
 end Behavioral;

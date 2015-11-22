@@ -1,3 +1,4 @@
+vhdl work "TEXT_INPUT_VHDL.vhd"
 vhdl work "STATE_CONTROLLOR_VHDL.vhd"
 vhdl work "SET_VHDL.vhd"
 vhdl work "RSET_VHDL.vhd"

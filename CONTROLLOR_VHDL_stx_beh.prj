@@ -1,3 +1,4 @@
+vhdl isim_temp "TEXT_INPUT_VHDL.vhd"
 vhdl isim_temp "STATE_CONTROLLOR_VHDL.vhd"
 vhdl isim_temp "SET_VHDL.vhd"
 vhdl isim_temp "RSET_VHDL.vhd"
