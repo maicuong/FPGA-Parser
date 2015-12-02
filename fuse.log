@@ -4,17 +4,14 @@ Number of CPUs detected in this system: 4
 Turning on mult-threading, number of parallel sub-compilation jobs: 8 
 Determining compilation order of HDL files
 Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/TEXT_INPUT_VHDL.vhd" into library work
+Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/STR_VHDL.vhd" into library work
 Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/STATE_CONTROLLOR_VHDL.vhd" into library work
 Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/SET_VHDL.vhd" into library work
 Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/RSET_VHDL.vhd" into library work
-Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/RBYTE_VHDL.vhd" into library work
-Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/POS_VHDL.vhd" into library work
 Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/OBYTE_VHDL.vhd" into library work
-Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/NBYTE_VHDL.vhd" into library work
+Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/NANY_VHDL.vhd" into library work
 Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/FILE_INPUT_VHDL.vhd" into library work
 Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/BYTE_VHDL.vhd" into library work
-Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/BACK_VHDL.vhd" into library work
-Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/ANY_VHDL.vhd" into library work
 Parsing VHDL file "C:/FPGAPrj/CONTROLLOR/CONTROLLOR_VHDL.vhd" into library work
 Starting static elaboration
 Completed static elaboration
@@ -29,17 +26,15 @@ Compiling architecture behave of entity FILE_INPUT_VHDL [file_input_vhdl_default
 Compiling architecture behavioral of entity TEXT_INPUT_VHDL [text_input_vhdl_default]
 Compiling architecture behavioral of entity STATE_CONTROLLOR_VHDL [state_controllor_vhdl_default]
 Compiling architecture behavioral of entity BYTE_VHDL [byte_vhdl_default]
-Compiling architecture behavioral of entity ANY_VHDL [any_vhdl_default]
 Compiling architecture behavioral of entity SET_VHDL [set_vhdl_default]
-Compiling architecture behavioral of entity RBYTE_VHDL [rbyte_vhdl_default]
-Compiling architecture behavioral of entity OBYTE_VHDL [obyte_vhdl_default]
-Compiling architecture behavioral of entity POS_VHDL [pos_vhdl_default]
-Compiling architecture behavioral of entity BACK_VHDL [back_vhdl_default]
-Compiling architecture behavioral of entity NBYTE_VHDL [nbyte_vhdl_default]
 Compiling architecture behavioral of entity RSET_VHDL [rset_vhdl_default]
+Compiling architecture behavioral of entity OBYTE_VHDL [obyte_vhdl_default]
+Compiling architecture behavioral of entity STR_VHDL [str_vhdl_default]
+Compiling architecture behavioral of entity NANY_VHDL [nany_vhdl_default]
 Compiling architecture behavioral of entity controllor_vhdl
 Time Resolution for simulation is 1ps.
-Compiled 32 VHDL Units
+Waiting for 9 sub-compilation(s) to finish...
+Compiled 26 VHDL Units
 Built simulation executable C:/FPGAPrj/CONTROLLOR/CONTROLLOR_VHDL_isim_beh.exe
-Fuse Memory Usage: 36676 KB
-Fuse CPU Usage: 1265 ms
+Fuse Memory Usage: 36332 KB
+Fuse CPU Usage: 1140 ms

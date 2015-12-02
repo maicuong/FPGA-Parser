@@ -33,7 +33,7 @@ begin
 			elsif (TRG_ONE = '1') then
 				if (TEXT_IN = NEZ_IN) then
 					match_reg <= '1' ;
-					count_out_reg <= COUNT_IN + 1;
+					--count_out_reg <= COUNT_IN + 1;
 				else
 					fail_reg <= '1' ;
 				end if;

@@ -8,16 +8,14 @@ entity STATE_CONTROLLOR_VHDL is
 		ID : in integer;
 		R : in std_logic ;
 		TRG_ONE : in std_logic ;
-		RDY_IN : in std_logic ;
+		RDY_IN : in std_logic := '0';
 		BYTE_TRG : out std_logic := '0';
-		ANY_TRG : out std_logic := '0';
 		SET_TRG : out std_logic := '0';
-		RBYTE_TRG : out std_logic := '0';
-		OBYTE_TRG : out std_logic := '0';
-		POS_TRG : out std_logic := '0';
-		BACK_TRG : out std_logic := '0';
-		NBYTE_TRG : out std_logic := '0';
 		RSET_TRG : out std_logic := '0';
+		OBYTE_TRG : out std_logic := '0';
+		STR_TRG : out std_logic := '0';
+		NANY_TRG : out std_logic := '0';
+		CONTINUE_TRG : out std_logic := '0' ;
 		OTHERS_TRG : out std_logic := '0';
 		FAIL_TRG : out std_logic := '0');
 		--CALL_TRG : out std_logic := '0';
@@ -31,8 +29,9 @@ end STATE_CONTROLLOR_VHDL;
 architecture Behavioral of STATE_CONTROLLOR_VHDL is
 
 	signal trg_one_reg : std_logic ;
-	signal trg_array : std_logic_vector(0 to 15);
+	signal trg_array : std_logic_vector(0 to 20);
 	--signal now_sig : natural	:= 0;
+	signal count : integer := 0;
 	
 begin
 	trg_one_reg <= TRG_ONE or RDY_IN ;
@@ -44,6 +43,7 @@ begin
 		   if(RDY_IN = '1' ) then
 				next_accept := true ;
 		   end if;
+
 			case id is
 				when 1 => if (next_accept) then 
 								trg_array <= (others => '0');
@@ -53,14 +53,7 @@ begin
 							 else
 							    trg_array <= (others => '0');
 							 end if;
-				when 2 => if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(2) <= '1';
-								--now_sig <= 2;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
+
 				when 3 => if (next_accept) then 
 								trg_array <= (others => '0');
 								trg_array(3) <= '1';
@@ -69,46 +62,8 @@ begin
 							 else
 							    trg_array <= (others => '0');
 							 end if; 
-				when 4 => if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(4) <= '1';
-								--now_sig <= 4;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				when 5 => if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(5) <= '1';
-								--now_sig <= 5;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				when 6 => if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(6) <= '1';
-								--now_sig <= 6;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				when 7 => if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(7) <= '1';
-								--now_sig <= 7;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				when 8 =>  if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(8) <= '1';
-								--now_sig <= 8;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
+
+
 				when 14 =>  if (next_accept) then 
 								trg_array <= (others => '0');
 								trg_array(14) <= '1';
@@ -166,22 +121,59 @@ begin
 							 else
 							    trg_array <= (others => '0');
 							 end if;
+				when 16 =>  if (next_accept) then 
+								trg_array <= (others => '0');
+								trg_array(16) <= '1';
+								--now_sig <= 15;
+								next_accept := false;
+							 else
+							    trg_array <= (others => '0');
+							 end if;
+				when 17 =>  if (next_accept) then 
+								trg_array <= (others => '0');
+								trg_array(17) <= '1';
+								--now_sig <= 15;
+								next_accept := false;
+							 else
+							    trg_array <= (others => '0');
+							 end if;
+				when 18 =>  if (next_accept) then 
+								trg_array <= (others => '0');
+								trg_array(18) <= '1';
+								--now_sig <= 15;
+								next_accept := false;
+							 else
+							    trg_array <= (others => '0');
+							 end if;
+				when 19 =>  if (next_accept) then 
+								trg_array <= (others => '0');
+								trg_array(19) <= '1';
+								--now_sig <= 15;
+								next_accept := false;
+							 else
+							    trg_array <= (others => '0');
+							 end if;
 				when others => trg_array <= (others => '0'); 
 			end case;
+
+			if(TRG_ONE = '1') then
+				trg_array <= (others => '0');
+				trg_array(0) <= '1';
+			else
+				trg_array(0) <= '0';
+			end if;
 
 		end if;
 	end process;
 
+	CONTINUE_TRG <= trg_array(0);
 	BYTE_TRG <= trg_array(1);
-	ANY_TRG <= trg_array(2);
 	SET_TRG <= trg_array(3);
-	RBYTE_TRG <= trg_array(4);
-	OBYTE_TRG <= trg_array(5);
-	POS_TRG <= trg_array(6);
-	BACK_TRG <= trg_array(7);
-	NBYTE_TRG <= trg_array(8);
 	RSET_TRG <= trg_array(14);
 	FAIL_TRG <= trg_array(13);
-	OTHERS_TRG <= (trg_array(9) or trg_array(10) or trg_array(11) or trg_array(12) or trg_array(15));
+	OBYTE_TRG <= trg_array(17);
+	STR_TRG <= trg_array(19);
+	NANY_TRG <= trg_array(16);
+	OTHERS_TRG <= (trg_array(9) or trg_array(10) or trg_array(11) or trg_array(12) or trg_array(15) or trg_array(18));
 		
 end Behavioral;

@@ -38,44 +38,36 @@ entity FILE_INPUT_TEST is
 end FILE_INPUT_TEST;
 
 architecture Behavioral of FILE_INPUT_TEST is
-	file in_file : text;
-	type string_array is array(1 to 45) of string(1 to 25);
-	signal res_string_array : string_array := (others => (others => ' '));
+	file data_in : text is in "sample.txt";
 
+   type data_array is array(1 to 2,1 to 2) of std_logic_vector(7 downto 0);
+   signal data1 :data_array;
 begin
 
 process
-       
-       variable l:         line;
-       variable c:         character;
-       variable is_string: boolean;
-		 variable j:         natural := 1;
+   
+type Y_array is array (1 to 2,1 to 2) of integer; 
+type un_array is array (1 to 2,1 to 2) of unsigned(7 downto 0); 
+variable Y : Y_array; 
+variable Y_un : un_array;
+variable inline : line;
+--variable v_char;
        
    begin
 	
-	wait until (CLK = '1') ;
-	file_open(in_file, "math_input.txt",  read_mode);
-      	  
-			  
-     while not endfile(in_file) loop		
-     readline(in_file, l);
-     -- clear the contents of the result string
-     for i in res_string_array'range loop
-         res_string_array(j)(i) <= ' ';
-     end loop;   
-     -- read all characters of the line, up to the length  
-     -- of the results string
-     for i in res_string_array'range loop
-
-    read(l, c, is_string);
-    if is_string then res_string_array(j)(i) <= c;
-    else exit;
-    end if;
-   
-     end loop;
-		
-		j := j+1;
-		end loop;
+	--wait until CLK = '1';
+	
+	for i in 1 to 2 loop 
+for j in 1 to 2 loop 
+while not endfile (data_in) loop 
+readline(data_in,inline);
+read(inline,Y(i,j)); 
+Y_un(i,j) := to_unsigned(Y(i,j),8);
+data1(i,j) <= std_logic_vector(Y_un(i,j));
+end loop; 
+end loop; 
+end loop; 
+wait for 2 ns; 
                      
 end process;
 

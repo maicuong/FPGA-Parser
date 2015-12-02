@@ -7,9 +7,9 @@ use ieee.std_logic_textio.all;
 entity CONTROLLOR_VHDL is
 	port (
 	CLK : in std_logic ;
-	START : in std_logic := '0' ;
-	PARSER_ERROR : buffer boolean := false ;
-	PARSER_OK : buffer boolean := false);
+	--START : in std_logic := '0' ;
+	PARSER_ERROR : out std_logic := '0';
+	PARSER_OK : out std_logic := '0');
 end CONTROLLOR_VHDL;
 
 architecture Behavioral of CONTROLLOR_VHDL is
@@ -23,18 +23,20 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		TRG : in std_logic ;
 		RDY_IN : in std_logic ;
 		FAIL : in std_logic ;
+		TEXT_IN : in character;
 		ID : out integer;
 		BYTE_TEXT : out character ;
 		SET_TEXT_START : out character ;
 	   SET_TEXT_SECOND : out character ;
 	   SET_OPTION : out integer ;
 		RBYTE_TEXT : out character ;
-		OBYTE_TEXT : out character ;
+		--OBYTE_TEXT : out character ;
+		STR_TEXT : out string(1 to 2);
 		NBYTE_TEXT : out character ;
 		CMD_LINE_NO : out natural;
 		END_FAIL : buffer boolean ;
 	   PARSER_OK : buffer boolean ;
-		NEXT_TEXT_RDY : out std_logic ;
+		--NEXT_TEXT_RDY : out std_logic ;
 		NEXT_RDY : out std_logic );
 	end component;
 	
@@ -44,9 +46,12 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		CLK : in std_logic ;
 		TRG : in std_logic ;
 		RDY : in std_logic ;
+		STR_RDY : in std_logic ;
 		COUNT_IN : in integer;
 		COUNT_OUT : out integer ;
-		CHAR_OUT : out character);
+		CONTINUE : out std_logic := '0';
+		CHAR_OUT : out character ;
+		STR_OUT : buffer string(1 to 2));
 	end component;
 	
 	
@@ -62,14 +67,18 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		RDY_IN : in std_logic ;
 		ID : in integer;
 		BYTE_TRG : out std_logic;
-		ANY_TRG : out std_logic;
+		--ANY_TRG : out std_logic;
 		SET_TRG : out std_logic;
-		RBYTE_TRG : out std_logic;
-		OBYTE_TRG : out std_logic;
-		POS_TRG : out std_logic;
-		BACK_TRG : out std_logic;
-		NBYTE_TRG : out std_logic;
+		--RBYTE_TRG : out std_logic;
+		--OBYTE_TRG : out std_logic;
+		--POS_TRG : out std_logic;
+		--BACK_TRG : out std_logic;
+		--NBYTE_TRG : out std_logic;
 		RSET_TRG : out std_logic;
+		OBYTE_TRG : out std_logic ;
+		STR_TRG : out std_logic;
+		NANY_TRG : out std_logic;
+		CONTINUE_TRG : out std_logic;
 		FAIL_TRG : out std_logic;
 		OTHERS_TRG : out std_logic);
 --		CALL_TRG : out std_logic := '0';
@@ -93,15 +102,6 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		RDY_ONE : out std_logic);
 	end component;
 	
-	component ANY_VHDL
-		port(
-		CLK : in std_logic ;
-		R : in std_logic ;
-		TRG_ONE : in std_logic ;
-		COUNT_IN : in integer ;
-		COUNT_OUT : out integer ;
-		RDY_ONE : out std_logic);
-	end component;
 	
 	component SET_VHDL
 		port(
@@ -118,15 +118,22 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		RDY_ONE : out std_logic);
 	end component;
 	
-	component RBYTE_VHDL
+	
+	
+	component RSET_VHDL 
 		port(
 		CLK : in std_logic ;
 		R : in std_logic ;
 		TRG_ONE : in std_logic ;
-		TEXT_IN : in string(1 to 10) ;
-		NEZ_IN : in character := 'a';
-		COUNT_IN : in integer := 1;
+		--CONTINUE_TRG : in std_logic ;
+		NEZ_IN_START : in character := 'a';
+		NEZ_IN_END : in character := 'z';
+		OPTION : in integer ;
+		TEXT_IN : in character ;
+		COUNT_IN : in integer := 4;
 		COUNT_OUT : out integer ;
+		--FAIL : out std_logic := '0' ;
+		CONTINUE_RDY : out std_logic ;
 		RDY_ONE : out std_logic := '0');
 	end component;
 	
@@ -142,64 +149,40 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		RDY_ONE : out std_logic := '0');
 	end component;
 	
-	component RSET_VHDL 
+	component STR_VHDL
 		port(
 		CLK : in std_logic ;
 		R : in std_logic ;
 		TRG_ONE : in std_logic ;
-		CONTINUE_TRG : in std_logic ;
-		NEZ_IN_START : in character := 'a';
-		NEZ_IN_END : in character := 'z';
-		OPTION : in integer ;
-		TEXT_IN : in character ;
-		COUNT_IN : in integer := 4;
-		COUNT_OUT : out integer ;
-		--FAIL : out std_logic := '0' ;
-		CONTINUE_RDY : out std_logic ;
-		RDY_ONE : out std_logic := '0');
-	end component;
-	
-	------------------------------------------------
-	--Need to fix
-	------------------------------------------------
-	component POS_VHDL
-		port(
-		CLK : in std_logic ;
-		R : in std_logic ;
-		TRG_ONE : in std_logic ;
+		TEXT_IN : in string(1 to 2);
+		NEZ_IN : in string(1 to 2);
 		COUNT_IN : in integer := 1;
 		COUNT_OUT : out integer ;
+		FAIL : out std_logic := '0' ;
 		RDY_ONE : out std_logic := '0');
 	end component;
 	
-	component BACK_VHDL
+	component NANY_VHDL 
 		port(
 		CLK : in std_logic ;
 		R : in std_logic ;
 		TRG_ONE : in std_logic ;
-		POS : in integer ;
+		TEXT_IN : in character := '1';
+		COUNT_IN : in integer := 1;
 		COUNT_OUT : out integer ;
-		RDY_ONE : out std_logic := '0');
-	end component;
-	-------------------------------------------------
-	
-	component NBYTE_VHDL
-		port(
-		CLK : in std_logic ;
-		R : in std_logic ;
-		TRG_ONE : in std_logic ;
-		TEXT_IN : in string(1 to 10) ;
-		NEZ_IN : in character ;
-		COUNT_IN : in integer ;
+		FAIL : out std_logic := '0' ;
 		RDY_ONE : out std_logic := '0');
 	end component;
 	
 	
+	--signal PARSER_OK :  boolean := false ;
+	signal count_start : integer := 0;
+	
+		
 	------------------------------------------------
 	--Need to fix when add new
 	------------------------------------------------
-	constant ARRAY_WIDTH : natural := 15 ;
-	signal text_file_in : string(1 to 10) := "(1+2)*3"&ESC&"  " ;
+	constant ARRAY_WIDTH : natural := 20 ;
 	signal byte_text_reg : character ;
 	signal set_text_start_sig, set_text_end_sig : character;
 	signal set_option_sig : integer ;
@@ -217,7 +200,7 @@ architecture Behavioral of CONTROLLOR_VHDL is
 	signal next_rdy_array : std_logic_vector(ARRAY_WIDTH downto 0) := (others => '0') ;
 	signal next_rdy : std_logic := '0';
 	signal id_reg : integer := 0 ;
-	signal trg_reg_array : std_logic_vector(ARRAY_WIDTH downto 1) := (others => '0') ;
+	signal trg_reg_array : std_logic_vector(ARRAY_WIDTH downto 0) := (others => '0') ;
 	signal fail_reg_array : std_logic_vector(ARRAY_WIDTH downto 0) := (others => '0') ;
 	signal fail_reg : std_logic := '0' ;
 
@@ -225,7 +208,7 @@ architecture Behavioral of CONTROLLOR_VHDL is
 	
 	signal nosignal_rdy : std_logic := '0' ;
 	
-	signal continue_sig : std_logic := '0' ;
+	signal continue_sig,line_continue_sig : std_logic := '0' ;
 	
 	type string_array is array(1 to 3) of string(1 to 10);
 	signal res_string_array : string_array := (others => (others => ' '));
@@ -233,6 +216,10 @@ architecture Behavioral of CONTROLLOR_VHDL is
 	
 	signal next_trg : std_logic := '0' ;
 	signal next_text_rdy_reg : std_logic := '0' ;
+	
+	signal start : std_logic := '0' ;
+	
+	--signal next_count := integer := 1 ;
 	
 	
 	--MAX function
@@ -264,14 +251,22 @@ architecture Behavioral of CONTROLLOR_VHDL is
 	
 	signal end_fail : boolean := false ;
 	signal end_parser_ok : boolean := false ;
+	--signal next_text_rdy : std_logic_vector(1 to 20);
+
+	signal string_text_reg, string_nez_reg : string(1 to 2) := "  ";
+	
+	signal state_next : std_logic := '0';
+	
 					
 begin
 	
 	count <= max_count(count_array) ;
 	next_rdy <= (next_rdy_function(next_rdy_array));
 	fail_reg <= next_rdy_function(fail_reg_array) ;
-	PARSER_ERROR <= end_fail or (end_parser_ok and text_in_reg /= ESC) ;
-	PARSER_OK <= (end_parser_ok and text_in_reg = ESC) ;
+	--PARSER_ERROR <= end_fail or (end_parser_ok and text_in_reg /= ESC) ;
+	--PARSER_OK <= (end_parser_ok and text_in_reg = ESC) ;
+	next_text_rdy_reg <= next_rdy_array(1) or next_rdy_array(3) or continue_sig or trg_reg_array(0);
+	state_next <= nosignal_rdy or continue_sig;
 	
 	------------------------------------------------
 	--Need to fix when add new
@@ -282,18 +277,20 @@ begin
 		TRG => START,
 		RDY_IN => next_rdy,
 		FAIL => fail_reg,
+		TEXT_IN => text_in_reg,
 		ID => id_reg,
 		BYTE_TEXT => byte_text_reg,
 		SET_TEXT_START => set_text_start_sig,
 	   SET_TEXT_SECOND => set_text_end_sig,
 	   SET_OPTION => set_option_sig,
 		RBYTE_TEXT => rbyte_text_reg,
-		OBYTE_TEXT => obyte_text_reg,
+		--OBYTE_TEXT => obyte_text_reg,
+		STR_TEXT => string_nez_reg,
 		NBYTE_TEXT => nbyte_text_reg,
 		CMD_LINE_NO => cmd_line,
 		END_FAIL => end_fail,
 		PARSER_OK => end_parser_ok,
-		NEXT_TEXT_RDY => next_text_rdy_reg,
+		--NEXT_TEXT_RDY => next_text_rdy_reg,
 		NEXT_RDY => nosignal_rdy);
 
 
@@ -302,10 +299,12 @@ begin
 		CLK => CLK,
 		TRG => START,
 		RDY => next_text_rdy_reg,
+		STR_RDY => trg_reg_array(19),
 		COUNT_IN => count,
 		COUNT_OUT => count_array(0),
-		CHAR_OUT => text_in_reg);
-
+		CONTINUE => line_continue_sig,
+		CHAR_OUT => text_in_reg,
+		STR_OUT => string_text_reg);
 
 
 	------------------------------------------------
@@ -316,26 +315,23 @@ begin
 		CLK => CLK ,
 		ID => id_reg ,
 		R => '0' ,
-		TRG_ONE => '0' ,
-		RDY_IN => nosignal_rdy ,
+		TRG_ONE => line_continue_sig ,
+		RDY_IN => state_next ,
 		BYTE_TRG => trg_reg_array(1) ,
-		ANY_TRG => trg_reg_array(2),
+		--ANY_TRG => trg_reg_array(2),
 		SET_TRG => trg_reg_array(3),
-		RBYTE_TRG => trg_reg_array(4),
-		OBYTE_TRG => trg_reg_array(5),
-		POS_TRG => trg_reg_array(6),
-		BACK_TRG => trg_reg_array(7),
-		NBYTE_TRG => trg_reg_array(8),
+		--RBYTE_TRG => trg_reg_array(4),
+		--OBYTE_TRG => trg_reg_array(5),
+		--POS_TRG => trg_reg_array(6),
+		--BACK_TRG => trg_reg_array(7),
+		--NBYTE_TRG => trg_reg_array(8),
 		RSET_TRG => trg_reg_array(14),
+		OBYTE_TRG => trg_reg_array(17),
+		STR_TRG => trg_reg_array(19),
+		NANY_TRG => trg_reg_array(16),
+		CONTINUE_TRG => trg_reg_array(0),
 		FAIL_TRG => fail_reg_array(13),
 		OTHERS_TRG => next_rdy_array(0));
-		--CALL_TRG => next_rdy_array(9),
-		--ALT_TRG => next_rdy_array(10),
-		--SKIP_TRG => next_rdy_array(11),
-		--CALL_TRG : out std_logic := '0';
-		--FIRST_TRG => next_rdy_array(12),
-		--RET_TRG => next_rdy_array(15));
-
 
 	BYTE : BYTE_VHDL port map (
 		CLK => CLK ,
@@ -347,14 +343,7 @@ begin
 		COUNT_OUT => count_array(1),
 		FAIL => fail_reg_array(1),
 		RDY_ONE => next_rdy_array(1));
-		
-	ANY : ANY_VHDL port map (
-	   CLK => CLK ,
-		R => '0',
-		TRG_ONE => trg_reg_array(2) ,
-		COUNT_IN => count,
-		COUNT_OUT => count_array(2),
-		RDY_ONE => next_rdy_array(2));
+
 		
 	SET : SET_VHDL port map (
 		CLK => CLK,
@@ -368,57 +357,12 @@ begin
 		COUNT_OUT => count_array(3),
 		FAIL => fail_reg_array(3),
 		RDY_ONE => next_rdy_array(3));
-		
-	RBYTE : RBYTE_VHDL port map (
-		CLK => CLK,
-		R => '0',
-		TRG_ONE => trg_reg_array(4),
-		TEXT_IN => text_file_in,
-		NEZ_IN => rbyte_text_reg,
-		COUNT_IN => count,
-		COUNT_OUT => count_array(4),
-		RDY_ONE => next_rdy_array(4));
-		
-	OBYTE : OBYTE_VHDL port map (
-		CLK => CLK,
-		R => '0',
-		TRG_ONE => trg_reg_array(5),
-		TEXT_IN => text_in_reg,
-		NEZ_IN => obyte_text_reg,
-		COUNT_IN => count,
-		COUNT_OUT => count_array(5),
-		RDY_ONE => next_rdy_array(5));
-		
-	POS : POS_VHDL port map (
-		CLK => CLK,
-		R => '0',
-		TRG_ONE => trg_reg_array(6),
-		COUNT_IN => count,
-		COUNT_OUT => pos_reg,
-		RDY_ONE => next_rdy_array(6));
-		
-	BACK : BACK_VHDL port map (
-		CLK => CLK,
-		R => '0',
-		TRG_ONE => trg_reg_array(7),
-		POS => pos_reg,
-		COUNT_OUT => count_array(7),
-		RDY_ONE => next_rdy_array(7));
-		
-	NBYTE : NBYTE_VHDL port map (
-		CLK => CLK,
-		R => '0',
-		TRG_ONE => trg_reg_array(8),
-		TEXT_IN => text_file_in,
-		NEZ_IN => nbyte_text_reg,
-		COUNT_IN => count,
-		RDY_ONE => next_rdy_array(8));
-		
+				
 	RSET : RSET_VHDL port map (
 		CLK => CLK,
 		R => '0',
 		TRG_ONE => trg_reg_array(14),
-		CONTINUE_TRG => continue_sig,
+		--CONTINUE_TRG => continue_sig,
 		NEZ_IN_START => set_text_start_sig,
 		NEZ_IN_END => set_text_end_sig,
 		OPTION => set_option_sig,
@@ -428,59 +372,57 @@ begin
 		--FAIL : out std_logic := '0' ;
 		CONTINUE_RDY => continue_sig,
 		RDY_ONE => next_rdy_array(14));
-
-
-	process
-		variable i,j : integer := 1;
-		--variable next_trg : std_logic := '0' ;
-	begin
-	   --next_trg <= (START or next_rdy);
 		
-		wait until (next_rdy = '1');
-		if(i < 10) then
-		--if(CLK'event and CLK = '1') then
-		   --if (count - ((string_line_no-1)*10) <10 ) then
-			--i := count - ((string_line_no-1)*10);
-			--end if;
-			--i := char_no ;
-			--j := string_line_no ; 
-			
-			--while (res_string_array(string_line_no)(i) = ' ') loop
-				--if(i > 9) then
-					--j := j + 1 ;
-					--i := 1 ;
-				--else 
-					i := i + 1;
-				--end if;
-			--end loop;
-			
-			
-			------------------------------
-			------------------------------
-			------------------------------
-			--text_in_reg <= res_string_array(string_line_no)(i);
-			end if;
-			--count <= i + (string_line_no-1)*10 ;
-		--end if;
-	end process;
-	
+	OBYTE : OBYTE_VHDL port map (
+		CLK => CLK,
+		R => '0',
+		TRG_ONE => trg_reg_array(17),
+		TEXT_IN => text_in_reg,
+		NEZ_IN => byte_text_reg,
+		COUNT_IN => count,
+		COUNT_OUT => count_array(17),
+		RDY_ONE => next_rdy_array(17));
+		
+   STR : STR_VHDL port map (
+		CLK => CLK,
+		R => '0',
+		TRG_ONE => trg_reg_array(19),
+		TEXT_IN => string_text_reg,
+		NEZ_IN => string_nez_reg,
+		COUNT_IN => count,
+		COUNT_OUT => count_array(19),
+		FAIL => fail_reg_array(19),
+		RDY_ONE => next_rdy_array(19));
+		
+	NANY : NANY_VHDL port map (
+		CLK => CLK,
+		R => '0',
+		TRG_ONE => trg_reg_array(16),
+		TEXT_IN => text_in_reg,
+		COUNT_IN => count,
+		COUNT_OUT => count_array(16),
+		FAIL => fail_reg_array(16),
+		RDY_ONE => next_rdy_array(16));
 
-	
-	
-	process 
-	file outfile : text is out "output.txt";
-	variable outline : line;
-  begin
-	wait until (PARSER_ERROR or PARSER_OK);
-	--write(outline,"Input file: math_copy.moz");
-	--write(outline,string'("\n"));
-	if (PARSER_ERROR) then
-		write(outline,"Parser Error!!");
-		writeline(outfile,outline);
-	elsif(PARSER_OK) then
-		write(outline,"Parser OK!!");
-		writeline(outfile,outline);
-	end if;
-  end process;
-	
+	process(CLK)
+	begin
+	   if(CLK'event and CLK = '0') then	
+	       if(end_fail) then
+	       PARSER_ERROR <= '1' ;
+	       elsif(end_parser_ok) then
+	       PARSER_OK <= '1' ;
+	       end if;
+	       
+	       count_start <= count_start + 1;
+	       
+	       if(count_start = 2) then
+	           start <= '1';
+	       else
+	       
+	           start <= '0';
+	       end if;
+           
+		end if;
+	end process;
+
 end Behavioral;
