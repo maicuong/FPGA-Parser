@@ -7,7 +7,7 @@ entity NANY_VHDL is
 		CLK : in std_logic ;
 		R : in std_logic ;
 		TRG_ONE : in std_logic ;
-		TEXT_IN : in character := '1';
+		TEXT_IN : in std_logic_vector(7 downto 0);
 		COUNT_IN : in integer := 1;
 		COUNT_OUT : out integer ;
 		FAIL : out std_logic := '0' ;
@@ -30,7 +30,7 @@ begin
 			if (R = '1') then
 				match_reg <= '0' ;
 			elsif (TRG_ONE = '1') then
-				if (TEXT_IN = ESC) then
+				if (TEXT_IN = "00000011") then
 					match_reg <= '1' ;
 					--count_out_reg <= COUNT_IN + 1;
 				else

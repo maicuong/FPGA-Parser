@@ -22,11 +22,13 @@
 #define alloca _alloca
 #endif
 static const char *ng0 = "C:/FPGAPrj/CONTROLLOR/NANY_VHDL.vhd";
+extern char *IEEE_P_3620187407;
 
 
 
 static void work_a_1100917119_3212880686_p_0(char *t0)
 {
+    char t15[16];
     unsigned char t1;
     char *t2;
     unsigned char t3;
@@ -41,6 +43,11 @@ static void work_a_1100917119_3212880686_p_0(char *t0)
     char *t12;
     char *t13;
     char *t14;
+    int t16;
+    unsigned int t17;
+    char *t18;
+    char *t19;
+    char *t20;
 
 LAB0:    xsi_set_current_line(29, ng0);
     t2 = (t0 + 992U);
@@ -112,9 +119,22 @@ LAB8:    xsi_set_current_line(31, ng0);
 LAB11:    xsi_set_current_line(33, ng0);
     t2 = (t0 + 1512U);
     t5 = *((char **)t2);
-    t6 = *((unsigned char *)t5);
-    t7 = (t6 == (unsigned char)27);
-    if (t7 != 0)
+    t2 = (t0 + 7284U);
+    t8 = (t0 + 7334);
+    t12 = (t15 + 0U);
+    t13 = (t12 + 0U);
+    *((int *)t13) = 0;
+    t13 = (t12 + 4U);
+    *((int *)t13) = 7;
+    t13 = (t12 + 8U);
+    *((int *)t13) = 1;
+    t16 = (7 - 0);
+    t17 = (t16 * 1);
+    t17 = (t17 + 1);
+    t13 = (t12 + 12U);
+    *((unsigned int *)t13) = t17;
+    t6 = ieee_std_logic_unsigned_equal_stdv_stdv(IEEE_P_3620187407, t5, t2, t8, t15);
+    if (t6 != 0)
         goto LAB13;
 
 LAB15:    xsi_set_current_line(37, ng0);
@@ -129,13 +149,13 @@ LAB15:    xsi_set_current_line(37, ng0);
 LAB14:    goto LAB9;
 
 LAB13:    xsi_set_current_line(34, ng0);
-    t2 = (t0 + 4984);
-    t8 = (t2 + 56U);
-    t11 = *((char **)t8);
-    t12 = (t11 + 56U);
-    t13 = *((char **)t12);
-    *((unsigned char *)t13) = (unsigned char)3;
-    xsi_driver_first_trans_fast(t2);
+    t13 = (t0 + 4984);
+    t14 = (t13 + 56U);
+    t18 = *((char **)t14);
+    t19 = (t18 + 56U);
+    t20 = *((char **)t19);
+    *((unsigned char *)t20) = (unsigned char)3;
+    xsi_driver_first_trans_fast(t13);
     goto LAB14;
 
 }

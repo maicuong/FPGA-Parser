@@ -43,118 +43,15 @@ begin
 		   if(RDY_IN = '1' ) then
 				next_accept := true ;
 		   end if;
-
-			case id is
-				when 1 => if (next_accept) then 
+			
+			if (next_accept) then 
 								trg_array <= (others => '0');
-								trg_array(1) <= '1';
+								trg_array(id) <= '1';
 								--now_sig <= 1;
 								next_accept := false;
 							 else
 							    trg_array <= (others => '0');
 							 end if;
-
-				when 3 => if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(3) <= '1';
-								--now_sig <= 3;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if; 
-
-
-				when 14 =>  if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(14) <= '1';
-								--now_sig <= 14;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				when 9 =>  if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(9) <= '1';
-								--now_sig <= 9;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				when 10 =>  if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(10) <= '1';
-								--now_sig <= 10;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				when 11 =>  if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(11) <= '1';
-								--now_sig <= 11;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				when 12 =>  if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(12) <= '1';
-								--now_sig <= 12;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				when 13 =>  if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(13) <= '1';
-								--now_sig <= 12;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				--when 13 => OTHERS_TRG <= trg_one_reg;
-				when 15 =>  if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(15) <= '1';
-								--now_sig <= 15;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				when 16 =>  if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(16) <= '1';
-								--now_sig <= 15;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				when 17 =>  if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(17) <= '1';
-								--now_sig <= 15;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				when 18 =>  if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(18) <= '1';
-								--now_sig <= 15;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				when 19 =>  if (next_accept) then 
-								trg_array <= (others => '0');
-								trg_array(19) <= '1';
-								--now_sig <= 15;
-								next_accept := false;
-							 else
-							    trg_array <= (others => '0');
-							 end if;
-				when others => trg_array <= (others => '0'); 
-			end case;
 
 			if(TRG_ONE = '1') then
 				trg_array <= (others => '0');

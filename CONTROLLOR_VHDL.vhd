@@ -1,13 +1,17 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use ieee.std_logic_arith.all;
 use STD.textio.all;
 use ieee.std_logic_textio.all;
+library unisim;
+use unisim.vcomponents.all;
 
 entity CONTROLLOR_VHDL is
 	port (
 	CLK : in std_logic ;
 	--START : in std_logic := '0' ;
+	--TEXT_INPUT_STREAM : in std_logic_vector(7 downto 0);
 	PARSER_ERROR : out std_logic := '0';
 	PARSER_OK : out std_logic := '0');
 end CONTROLLOR_VHDL;
@@ -23,7 +27,7 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		TRG : in std_logic ;
 		RDY_IN : in std_logic ;
 		FAIL : in std_logic ;
-		TEXT_IN : in character;
+		TEXT_IN : in std_logic_vector(7 downto 0);
 		ID : out integer;
 		BYTE_TEXT : out character ;
 		SET_TEXT_START : out character ;
@@ -34,8 +38,8 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		STR_TEXT : out string(1 to 2);
 		NBYTE_TEXT : out character ;
 		CMD_LINE_NO : out natural;
-		END_FAIL : buffer boolean ;
-	   PARSER_OK : buffer boolean ;
+		END_FAIL : buffer std_logic ;
+	   PARSER_OK : buffer std_logic ;
 		--NEXT_TEXT_RDY : out std_logic ;
 		NEXT_RDY : out std_logic );
 	end component;
@@ -44,14 +48,18 @@ architecture Behavioral of CONTROLLOR_VHDL is
 	component TEXT_INPUT_VHDL 
 	   port(
 		CLK : in std_logic ;
-		TRG : in std_logic ;
+		READ_TRG : in std_logic ;
+	   TRG : in std_logic ;
 		RDY : in std_logic ;
 		STR_RDY : in std_logic ;
 		COUNT_IN : in integer;
+		TEXT_INPUT_STREAM : in std_logic_vector(7 downto 0);
+	   COUNT_TEXT_STREAM : in natural;
 		COUNT_OUT : out integer ;
 		CONTINUE : out std_logic := '0';
-		CHAR_OUT : out character ;
-		STR_OUT : buffer string(1 to 2));
+		RUN : out std_logic := '0';
+		CHAR_OUT : out std_logic_vector(7 downto 0)) ;
+		--STR_OUT : buffer string(1 to 2));
 	end component;
 	
 	
@@ -94,7 +102,7 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		CLK : in std_logic ;
 		R : in std_logic := '0';
 		TRG_ONE : in std_logic ;
-		TEXT_IN : in character ;
+		TEXT_IN : in std_logic_vector(7 downto 0) ;
 		NEZ_IN : in character ;
 		COUNT_IN : in integer ;
 		COUNT_OUT : out integer ;
@@ -111,7 +119,7 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		NEZ_IN_START : in character ;
 		NEZ_IN_END : in character ;
 		OPTION : in integer ;
-		TEXT_IN : in character;
+		TEXT_IN : in std_logic_vector(7 downto 0);
 		COUNT_IN : in integer;
 		COUNT_OUT : out integer;
 		FAIL : out std_logic ;
@@ -126,10 +134,10 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		R : in std_logic ;
 		TRG_ONE : in std_logic ;
 		--CONTINUE_TRG : in std_logic ;
-		NEZ_IN_START : in character := 'a';
+		NEZ_IN_START : in character;
 		NEZ_IN_END : in character := 'z';
 		OPTION : in integer ;
-		TEXT_IN : in character ;
+		TEXT_IN : in std_logic_vector(7 downto 0) ;
 		COUNT_IN : in integer := 4;
 		COUNT_OUT : out integer ;
 		--FAIL : out std_logic := '0' ;
@@ -142,8 +150,8 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		CLK : in std_logic ;
 		R : in std_logic ;
 		TRG_ONE : in std_logic ;
-		TEXT_IN : in character := 'a';
-		NEZ_IN : in character := 'a';
+		TEXT_IN : in std_logic_vector(7 downto 0);
+		NEZ_IN : in character;
 		COUNT_IN : in integer := 1;
 		COUNT_OUT : out integer ;
 		RDY_ONE : out std_logic := '0');
@@ -167,11 +175,20 @@ architecture Behavioral of CONTROLLOR_VHDL is
 		CLK : in std_logic ;
 		R : in std_logic ;
 		TRG_ONE : in std_logic ;
-		TEXT_IN : in character := '1';
+		TEXT_IN : in std_logic_vector(7 downto 0);
 		COUNT_IN : in integer := 1;
 		COUNT_OUT : out integer ;
 		FAIL : out std_logic := '0' ;
 		RDY_ONE : out std_logic := '0');
+	end component;
+	
+	component MEMORY_VHDL
+	    port (
+		 CLK : in std_logic;
+       DIN : in std_logic_vector(7 downto 0);
+       DOUT : out std_logic_vector(7 downto 0);
+       WR : in std_logic;
+       ADDR_IN : in std_logic_vector(8 downto 0));
 	end component;
 	
 	
@@ -196,7 +213,7 @@ architecture Behavioral of CONTROLLOR_VHDL is
 	type count_all is array (0 to ARRAY_WIDTH) of integer;
 	signal count_array : count_all := (others => 1) ;
 	
-	signal text_in_reg : character := ' ' ;
+	signal text_in_reg : std_logic_vector(7 downto 0) ;
 	signal next_rdy_array : std_logic_vector(ARRAY_WIDTH downto 0) := (others => '0') ;
 	signal next_rdy : std_logic := '0';
 	signal id_reg : integer := 0 ;
@@ -217,7 +234,14 @@ architecture Behavioral of CONTROLLOR_VHDL is
 	signal next_trg : std_logic := '0' ;
 	signal next_text_rdy_reg : std_logic := '0' ;
 	
-	signal start : std_logic := '0' ;
+	signal start,start1 : std_logic := '0' ;
+	
+	--Test
+	signal text_input_stream : std_logic_vector(7 downto 0);
+	signal count_text_stream : integer := 0;
+	type text_sample is array(1 to 8) of std_logic_vector(7 downto 0); 
+	signal txt_sample : text_sample := ("01111011","00100010","01000001","00100010","00111010","00111001","01111101","00000011");
+	------
 	
 	--signal next_count := integer := 1 ;
 	
@@ -249,24 +273,31 @@ architecture Behavioral of CONTROLLOR_VHDL is
 	end next_rdy_function;
 	
 	
-	signal end_fail : boolean := false ;
-	signal end_parser_ok : boolean := false ;
+	signal end_fail : std_logic := '0' ;
+	signal end_parser_ok : std_logic := '0' ;
 	--signal next_text_rdy : std_logic_vector(1 to 20);
 
 	signal string_text_reg, string_nez_reg : string(1 to 2) := "  ";
 	
 	signal state_next : std_logic := '0';
 	
+	signal add_in : std_logic_vector(8 downto 0);
+	signal dout : std_logic_vector(7 downto 0);
+	
+	signal ram_we_sig : std_logic := '1';
+	
+	signal fin : boolean := false;
 					
 begin
 	
 	count <= max_count(count_array) ;
 	next_rdy <= (next_rdy_function(next_rdy_array));
 	fail_reg <= next_rdy_function(fail_reg_array) ;
-	--PARSER_ERROR <= end_fail or (end_parser_ok and text_in_reg /= ESC) ;
+	PARSER_ERROR <= end_fail ;
 	--PARSER_OK <= (end_parser_ok and text_in_reg = ESC) ;
 	next_text_rdy_reg <= next_rdy_array(1) or next_rdy_array(3) or continue_sig or trg_reg_array(0);
 	state_next <= nosignal_rdy or continue_sig;
+	PARSER_OK <= end_parser_ok;
 	
 	------------------------------------------------
 	--Need to fix when add new
@@ -297,14 +328,18 @@ begin
 	TEXT_INPUT : TEXT_INPUT_VHDL
 	port map(
 		CLK => CLK,
-		TRG => START,
+		READ_TRG => start1,
+		TRG => start,
 		RDY => next_text_rdy_reg,
 		STR_RDY => trg_reg_array(19),
 		COUNT_IN => count,
+		TEXT_INPUT_STREAM => text_input_stream,
+		COUNT_TEXT_STREAM => count_text_stream,
 		COUNT_OUT => count_array(0),
 		CONTINUE => line_continue_sig,
-		CHAR_OUT => text_in_reg,
-		STR_OUT => string_text_reg);
+		RUN => start,
+		CHAR_OUT => text_in_reg);
+		--STR_OUT => string_text_reg);
 
 
 	------------------------------------------------
@@ -405,24 +440,98 @@ begin
 		RDY_ONE => next_rdy_array(16));
 
 	process(CLK)
+		variable buf_out : LINE;
+		variable end_sig : boolean := true;
 	begin
-	   if(CLK'event and CLK = '0') then	
-	       if(end_fail) then
-	       PARSER_ERROR <= '1' ;
-	       elsif(end_parser_ok) then
-	       PARSER_OK <= '1' ;
+	   if(CLK'event and CLK = '0') then
+			 --wait until (end_fail or end_parser_ok);
+			 
+	       if(end_fail = '1' and end_sig) then
+	       --PARSER_ERROR <= '1' ;
+			 write(buf_out,"PARSER ERROR");
+			 writeline(output,buf_out);
+			 end_sig := false;
+	       elsif(end_parser_ok = '1' and end_sig) then
+	       --PARSER_OK <= '1' ;
+			 write(buf_out,"PARSER OK");
+			 writeline(output,buf_out);
+			 end_sig := false;
 	       end if;
 	       
+			 if(dout = "00000011") then
+			 
 	       count_start <= count_start + 1;
 	       
-	       if(count_start = 2) then
-	           start <= '1';
-	       else
-	       
-	           start <= '0';
-	       end if;
+	       --if(count_start = 2) then
+	         --start1 <= '1';
+			 --elsif (count_start = 4) then
+				--start <= '1';
+	       --else
+	         --start <= '0';
+				--start1 <= '0';
+	       --end if;
+			 end if;
            
 		end if;
 	end process;
+	
+	process(CLK)
+	begin
+		if(CLK'event and CLK = '1') then
+			if(count_text_stream >= 1 and count_text_stream <= 8) then
+				--if(not fin) then
+				text_input_stream <= txt_sample(count_text_stream);
+				--end if;
+				--count_text_stream <= count_text_stream + 1;
+			--else
+				--text_input_stream <= "UUUUUUUU";
+			end if;
+			
+			--if(count_text_stream = 9) then
+				--count_text_stream <= 1;
+				--fin <= true;
+			--end if;
+		end if;
+	end process;
+	
+	process(CLK)
+	begin
+		if(CLK'event and CLK = '0') then
+			if(count_text_stream <= 8) then
+				count_text_stream <= count_text_stream + 1;
+			end if;
+		end if;
+	end process;
+	
+	--add_in <= CONV_std_logic_vector(count_text_stream,9);
+	
+	--MEMORY : MEMORY_VHDL
+		--port map(
+		 --CLK => CLK,
+       --DIN => text_input_stream,
+		 --DOUT => dout,
+       --WR => '1',
+       --ADDR_IN => add_in);
+		 
+	--process(CLK)
+	--begin
+		--if(CLK'event and CLK = '1') then
+			--if(dout = "00000011") then
+				--ram_we_sig <= '0';
+			--end if;
+		--end if;
+	--end process;
+	
+	--ram_we_sig <= '1' when (dout /= "00000011") else '0';
+		 
+	--MEM : RAMB4_S8
+		--port map(
+		--ADDR => add_in,
+		--DI => text_input_stream,
+		--CLK => CLK,
+		--EN => '1',
+		--RST => '0',
+		--WE => ram_we_sig,
+		--DO => dout);
 
 end Behavioral;

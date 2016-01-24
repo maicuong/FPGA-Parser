@@ -22,11 +22,15 @@
 #define alloca _alloca
 #endif
 static const char *ng0 = "C:/FPGAPrj/CONTROLLOR/OBYTE_VHDL.vhd";
+extern char *IEEE_P_3620187407;
+extern char *IEEE_P_1242562249;
 
+char *ieee_p_1242562249_sub_180853171_1035706684(char *, char *, int , int );
 
 
 static void work_a_2225874554_3212880686_p_0(char *t0)
 {
+    char t15[16];
     unsigned char t1;
     char *t2;
     unsigned char t3;
@@ -42,7 +46,7 @@ static void work_a_2225874554_3212880686_p_0(char *t0)
     char *t13;
     char *t14;
 
-LAB0:    xsi_set_current_line(28, ng0);
+LAB0:    xsi_set_current_line(29, ng0);
     t2 = (t0 + 992U);
     t3 = xsi_signal_has_event(t2);
     if (t3 == 1)
@@ -58,7 +62,7 @@ LAB3:    t2 = (t0 + 4448);
     *((int *)t2) = 1;
 
 LAB1:    return;
-LAB2:    xsi_set_current_line(29, ng0);
+LAB2:    xsi_set_current_line(30, ng0);
     t4 = (t0 + 1192U);
     t8 = *((char **)t4);
     t9 = *((unsigned char *)t8);
@@ -73,7 +77,7 @@ LAB10:    t2 = (t0 + 1352U);
     if (t3 != 0)
         goto LAB11;
 
-LAB12:    xsi_set_current_line(39, ng0);
+LAB12:    xsi_set_current_line(40, ng0);
     t2 = (t0 + 4560);
     t4 = (t2 + 56U);
     t5 = *((char **)t4);
@@ -91,7 +95,7 @@ LAB5:    t4 = (t0 + 1032U);
     t1 = t7;
     goto LAB7;
 
-LAB8:    xsi_set_current_line(30, ng0);
+LAB8:    xsi_set_current_line(31, ng0);
     t4 = (t0 + 4560);
     t11 = (t4 + 56U);
     t12 = *((char **)t11);
@@ -101,19 +105,20 @@ LAB8:    xsi_set_current_line(30, ng0);
     xsi_driver_first_trans_fast(t4);
     goto LAB9;
 
-LAB11:    xsi_set_current_line(32, ng0);
+LAB11:    xsi_set_current_line(33, ng0);
     t2 = (t0 + 1512U);
     t5 = *((char **)t2);
-    t6 = *((unsigned char *)t5);
-    t2 = (t0 + 1672U);
-    t8 = *((char **)t2);
-    t7 = *((unsigned char *)t8);
-    t9 = (t6 == t7);
-    if (t9 != 0)
+    t2 = (t0 + 6672U);
+    t8 = (t0 + 1672U);
+    t11 = *((char **)t8);
+    t6 = *((unsigned char *)t11);
+    t8 = ieee_p_1242562249_sub_180853171_1035706684(IEEE_P_1242562249, t15, ((int)(t6)), 8);
+    t7 = ieee_std_logic_unsigned_equal_stdv_stdv(IEEE_P_3620187407, t5, t2, t8, t15);
+    if (t7 != 0)
         goto LAB13;
 
 LAB15:
-LAB14:    xsi_set_current_line(37, ng0);
+LAB14:    xsi_set_current_line(38, ng0);
     t2 = (t0 + 4560);
     t4 = (t2 + 56U);
     t5 = *((char **)t4);
@@ -138,7 +143,7 @@ static void work_a_2225874554_3212880686_p_1(char *t0)
     char *t7;
     char *t8;
 
-LAB0:    xsi_set_current_line(44, ng0);
+LAB0:    xsi_set_current_line(45, ng0);
 
 LAB3:    t1 = (t0 + 2312U);
     t2 = *((char **)t1);
@@ -170,7 +175,7 @@ static void work_a_2225874554_3212880686_p_2(char *t0)
     char *t7;
     char *t8;
 
-LAB0:    xsi_set_current_line(45, ng0);
+LAB0:    xsi_set_current_line(46, ng0);
 
 LAB3:    t1 = (t0 + 2472U);
     t2 = *((char **)t1);

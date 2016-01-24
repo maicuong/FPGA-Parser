@@ -1,13 +1,14 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use ieee.numeric_std.all;
 
 entity BYTE_VHDL is
 	port(
 		CLK : in std_logic ;
 		R : in std_logic ;
 		TRG_ONE : in std_logic ;
-		TEXT_IN : in character := '1';
+		TEXT_IN : in std_logic_vector(7 downto 0);
 		NEZ_IN : in character := 'a';
 		COUNT_IN : in integer := 1;
 		COUNT_OUT : out integer ;
@@ -31,7 +32,7 @@ begin
 			if (R = '1') then
 				match_reg <= '0' ;
 			elsif (TRG_ONE = '1') then
-				if (TEXT_IN = NEZ_IN) then
+				if (TEXT_IN = std_logic_vector(to_unsigned(natural(character'pos(NEZ_IN)),8))) then
 					match_reg <= '1' ;
 					--count_out_reg <= COUNT_IN + 1;
 				else
